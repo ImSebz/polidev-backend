@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    date_default_timezone_set('America/Bogota');
     $data = json_decode(file_get_contents('php://input'), true);
     if (!$data) {
         http_response_code(400);
@@ -50,7 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => 'Database connection failed']);
         exit;
     }
-
+    
+    
+    $fecha_registro = date('Y-m-d H:i:s');
     $stmt = $conn->prepare('INSERT INTO usuarios (nombre, apellido, email, celular, departamento, ciudad, tipo_documento, numero_documento, tipo_programa, modalidad, sede, programa, contacto_preferido, tratamiento_datos, acepta_terminos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $stmt->bind_param('ssssssssssssssi', $nombre, $apellido, $email, $celular, $departamento, $ciudad, $tipo_documento, $numero_documento, $tipo_programa, $modalidad, $sede, $programa, $contacto_preferido, $tratamiento_datos, $acepta_terminos);
     if ($stmt->execute()) {
